@@ -5,6 +5,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Unna-Regular.ttf</string>
+		<string>Teko-VariableFont_wght.ttf</string>
 	</array>
 </dict>
 </plist>
