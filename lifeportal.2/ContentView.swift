@@ -14,19 +14,22 @@ struct ContentView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // Home Tab
-            HomeView(
-                fullName: $fullName,
-                nickname: $nickname,
-                birthDate: $birthDate, 
-                isEditing: $isEditing,
-                selectedImage: $selectedImage,
-                showImagePicker: $showImagePicker,
-                selectedCategory: $selectedCategory,
-                saveImage: saveImage,
-                loadSavedImage: loadSavedImage,
-                deleteExistingProfileImage: deleteExistingProfileImage
-            )
+            // Home Tab with particles
+            ZStack {
+                ParticleView()
+                HomeView(
+                    fullName: $fullName,
+                    nickname: $nickname,
+                    birthDate: $birthDate, 
+                    isEditing: $isEditing,
+                    selectedImage: $selectedImage,
+                    showImagePicker: $showImagePicker,
+                    selectedCategory: $selectedCategory,
+                    saveImage: saveImage,
+                    loadSavedImage: loadSavedImage,
+                    deleteExistingProfileImage: deleteExistingProfileImage
+                )
+            }
             .tabItem {
                 Image(systemName: "house.fill")
                 Text("Home")
@@ -34,28 +37,37 @@ struct ContentView: View {
             .tag(0)
             
             // Victories Tab
-            VictoriesView()
-                .tabItem {
-                    Image(systemName: "trophy.fill")
-                    Text("Victories")
-                }
-                .tag(1)
+            ZStack {
+                ParticleView()
+                VictoriesView()
+            }
+            .tabItem {
+                Image(systemName: "trophy.fill")
+                Text("Victories")
+            }
+            .tag(1)
             
             // Kin Tab
-            KinView()
-                .tabItem {
-                    Image(systemName: "person.3.fill")
-                    Text("Kin")
-                }
-                .tag(2)
+            ZStack {
+                ParticleView()
+                KinView()
+            }
+            .tabItem {
+                Image(systemName: "person.3.fill")
+                Text("Kin")
+            }
+            .tag(2)
             
             // Memories Tab
-            MemoriesView()
-                .tabItem {
-                    Image(systemName: "photo.on.rectangle.angled")
-                    Text("Memories")
-                }
-                .tag(3)
+            ZStack {
+                ParticleView()
+                MemoriesView()
+            }
+            .tabItem {
+                Image(systemName: "photo.on.rectangle.angled")
+                Text("Memories")
+            }
+            .tag(3)
         }
         .accentColor(Color(hex: "#3B8D85"))
         .onAppear {
@@ -125,6 +137,8 @@ struct HomeView: View {
     var saveImage: () -> Void
     var loadSavedImage: () -> Void
     var deleteExistingProfileImage: () -> Void
+    @State private var showCategoryDetail = false
+    @State private var currentCategory: String = ""
     
     var body: some View {
         ZStack {
@@ -138,6 +152,10 @@ struct HomeView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            
+            // Add particle effect above background but below content
+            ParticleView()
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // Header Area
@@ -285,7 +303,7 @@ struct HomeView: View {
                                 .padding(.horizontal)
                             }
                         }
-                        .padding(.top, 10)
+                        .padding(.top, 5)
                         
                         // Life Categories Grid - Refined
                         VStack(alignment: .leading, spacing: 14) {
@@ -305,7 +323,11 @@ struct HomeView: View {
                                         icon: "person.fill",
                                         color: Color(hex: "#3B8D85"),
                                         isSelected: selectedCategory == "PERSONAL",
-                                        action: { selectedCategory = "PERSONAL" }
+                                        action: { 
+                                            selectedCategory = "PERSONAL"
+                                            currentCategory = "Personal"
+                                            showCategoryDetail = true
+                                        }
                                     )
                                     
                                     // Health Button
@@ -314,7 +336,11 @@ struct HomeView: View {
                                         icon: "heart.fill",
                                         color: Color(hex: "#3B8D85"),
                                         isSelected: selectedCategory == "HEALTH",
-                                        action: { selectedCategory = "HEALTH" }
+                                        action: { 
+                                            selectedCategory = "HEALTH"
+                                            currentCategory = "Health"
+                                            showCategoryDetail = true
+                                        }
                                     )
                                 }
                                 
@@ -326,7 +352,11 @@ struct HomeView: View {
                                         icon: "briefcase.fill",
                                         color: Color(hex: "#3B8D85"),
                                         isSelected: selectedCategory == "PROFESSIONAL",
-                                        action: { selectedCategory = "PROFESSIONAL" }
+                                        action: { 
+                                            selectedCategory = "PROFESSIONAL"
+                                            currentCategory = "Professional"
+                                            showCategoryDetail = true
+                                        }
                                     )
                                     
                                     // Future Button
@@ -335,7 +365,11 @@ struct HomeView: View {
                                         icon: "hourglass",
                                         color: Color(hex: "#3B8D85"),
                                         isSelected: selectedCategory == "FUTURE",
-                                        action: { selectedCategory = "FUTURE" }
+                                        action: { 
+                                            selectedCategory = "FUTURE"
+                                            currentCategory = "Future"
+                                            showCategoryDetail = true
+                                        }
                                     )
                                 }
                             }
@@ -351,6 +385,9 @@ struct HomeView: View {
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(selectedImage: $selectedImage)
+        }
+        .fullScreenCover(isPresented: $showCategoryDetail) {
+            CategoryDetailView(categoryName: currentCategory, isPresented: $showCategoryDetail)
         }
     }
 }
@@ -369,6 +406,10 @@ struct VictoriesView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            
+            // Add particle effect above background
+            ParticleView()
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // Header Area
@@ -406,6 +447,10 @@ struct KinView: View {
             )
             .ignoresSafeArea()
             
+            // Add particle effect above background
+            ParticleView()
+                .ignoresSafeArea()
+            
             VStack(spacing: 0) {
                 // Header Area
                 ZStack {
@@ -441,6 +486,10 @@ struct MemoriesView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            
+            // Add particle effect above background
+            ParticleView()
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // Header Area
@@ -617,6 +666,7 @@ struct CategoryButton: View {
     var color: Color
     var isSelected: Bool
     var action: () -> Void
+    @State private var isPressed = false
     
     var body: some View {
         Button(action: action) {
@@ -684,8 +734,15 @@ struct CategoryButton: View {
                     .padding(.vertical, 14)
                 }
             }
+            .scaleEffect(isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: isPressed)
         }
         .buttonStyle(PlainButtonStyle())
+        .pressEvents(onPress: {
+            isPressed = true
+        }, onRelease: {
+            isPressed = false
+        })
     }
 }
 
@@ -695,6 +752,7 @@ struct QuickActionButton: View {
     var icon: String
     var color: Color
     var action: () -> Void
+    @State private var isPressed = false
     
     var body: some View {
         Button(action: action) {
@@ -749,8 +807,41 @@ struct QuickActionButton: View {
             }
             .frame(width: 85)
             .padding(.vertical, 8)
+            .scaleEffect(isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: isPressed)
         }
         .buttonStyle(PlainButtonStyle())
+        .pressEvents(onPress: {
+            isPressed = true
+        }, onRelease: {
+            isPressed = false
+        })
+    }
+}
+
+// Add a ViewModifier to handle press events
+struct PressActions: ViewModifier {
+    var onPress: () -> Void
+    var onRelease: () -> Void
+    
+    func body(content: Content) -> some View {
+        content
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        onPress()
+                    }
+                    .onEnded { _ in
+                        onRelease()
+                    }
+            )
+    }
+}
+
+// Extension for the pressEvents modifier
+extension View {
+    func pressEvents(onPress: @escaping () -> Void, onRelease: @escaping () -> Void) -> some View {
+        modifier(PressActions(onPress: onPress, onRelease: onRelease))
     }
 }
 
@@ -803,7 +894,120 @@ extension Color {
         self.init(red: r, green: g, blue: b)
     }
 }
+
+// Add this new ParticleView component
+struct ParticleView: View {
+    struct Particle: Identifiable {
+        let id = UUID()
+        var position: CGPoint
+        var size: CGFloat
+        var opacity: Double
+        var speed: CGFloat
+        var direction: CGFloat // Angle in radians
+        var color: Color
+    }
+    
+    // Use environment object to preserve state across view redraws
+    @EnvironmentObject var store: ParticleStore
+    let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                ForEach(store.particles) { particle in
+                    Circle()
+                        .fill(particle.color)
+                        .frame(width: particle.size, height: particle.size)
+                        .position(particle.position)
+                        .opacity(particle.opacity)
+                        .blendMode(.screen) // This helps make particles more visible
+                }
+            }
+            .onAppear {
+                if store.particles.isEmpty {
+                    generateParticles(in: geometry.size)
+                }
+            }
+            .onChange(of: geometry.size) { oldSize, newSize in
+                // Only regenerate particles if the size changes substantially
+                if abs(oldSize.width - newSize.width) > 50 || abs(oldSize.height - newSize.height) > 50 {
+                    generateParticles(in: newSize)
+                }
+            }
+            .onReceive(timer) { _ in
+                updateParticles(in: geometry.size)
+            }
+        }
+    }
+    
+    private func generateParticles(in size: CGSize) {
+        // Use an array of colors for more variety
+        let colors = [
+            Color(hex: "#3B8D85"), // Teal
+            Color(hex: "#5B9BD5"), // Blue
+            Color.white,          // White
+            Color(hex: "#8E7CC3")  // Purple
+        ]
+        
+        let particleCount = 30
+        
+        store.particles = (0..<particleCount).map { _ in
+            Particle(
+                position: CGPoint(
+                    x: CGFloat.random(in: 0...size.width),
+                    y: CGFloat.random(in: 0...size.height)
+                ),
+                size: CGFloat.random(in: 2...5),
+                opacity: Double.random(in: 0.1...0.3), // Increased opacity
+                speed: CGFloat.random(in: 0.1...0.5), // Reduced speed range (was 0.3...1.2)
+                direction: CGFloat.random(in: 0...(2 * .pi)),
+                color: colors.randomElement() ?? Color.white
+            )
+        }
+    }
+    
+    private func updateParticles(in size: CGSize) {
+        guard !store.particles.isEmpty else { return }
+        
+        for i in 0..<store.particles.count {
+            // Update position based on direction and speed
+            let dx = store.particles[i].speed * cos(store.particles[i].direction)
+            let dy = store.particles[i].speed * sin(store.particles[i].direction)
+            var newPosition = CGPoint(
+                x: store.particles[i].position.x + dx,
+                y: store.particles[i].position.y + dy
+            )
+            
+            // Slightly change direction occasionally to make movement more organic
+            if Int.random(in: 0...100) < 5 {
+                store.particles[i].direction += CGFloat.random(in: -0.2...0.2)
+            }
+            
+            // Keep particles within bounds
+            if newPosition.x < 0 {
+                newPosition.x = size.width
+            } else if newPosition.x > size.width {
+                newPosition.x = 0
+            }
+            
+            if newPosition.y < 0 {
+                newPosition.y = size.height
+            } else if newPosition.y > size.height {
+                newPosition.y = 0
+            }
+            
+            store.particles[i].position = newPosition
+        }
+    }
+}
+
+// Class to store and persist particles
+class ParticleStore: ObservableObject {
+    @Published var particles: [ParticleView.Particle] = []
+}
+
 #Preview {
     ContentView()
+        .environmentObject(ParticleStore())
 }
 

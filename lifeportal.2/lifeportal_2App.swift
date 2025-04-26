@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct lifeportal_2App: App {
+    @StateObject private var particleStore = ParticleStore()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(particleStore)
         }
     }
 }
