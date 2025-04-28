@@ -11,6 +11,8 @@ struct ContentView: View {
     @AppStorage("profileImageExists") private var profileImageExists: Bool = false
     @State private var selectedCategory: String? = nil
     @State private var selectedTab = 0
+    @State private var showExportView = false
+    @State private var showAppearanceView = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -25,6 +27,8 @@ struct ContentView: View {
                     selectedImage: $selectedImage,
                     showImagePicker: $showImagePicker,
                     selectedCategory: $selectedCategory,
+                    showExportView: $showExportView,
+                    showAppearanceView: $showAppearanceView,
                     saveImage: saveImage,
                     loadSavedImage: loadSavedImage,
                     deleteExistingProfileImage: deleteExistingProfileImage
@@ -69,7 +73,7 @@ struct ContentView: View {
             }
             .tag(3)
         }
-        .accentColor(Color(hex: "#3B8D85"))
+        .accentColor(AppColors.accent)
         .onAppear {
             loadSavedImage()
             
@@ -83,16 +87,22 @@ struct ContentView: View {
                 .foregroundColor: UIColor.gray
             ]
             let selectedAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: UIColor(Color(hex: "#3B8D85"))
+                .foregroundColor: UIColor(AppColors.accent)
             ]
             
             appearance.stackedLayoutAppearance.normal.titleTextAttributes = normalAttributes
             appearance.stackedLayoutAppearance.selected.titleTextAttributes = selectedAttributes
             appearance.stackedLayoutAppearance.normal.iconColor = .gray
-            appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color(hex: "#3B8D85"))
+            appearance.stackedLayoutAppearance.selected.iconColor = UIColor(AppColors.accent)
             
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+        .sheet(isPresented: $showExportView) {
+            ExportView(isPresented: $showExportView)
+        }
+        .sheet(isPresented: $showAppearanceView) {
+            AppearanceView(isPresented: $showAppearanceView)
         }
     }
 
@@ -134,6 +144,8 @@ struct HomeView: View {
     @Binding var selectedImage: UIImage?
     @Binding var showImagePicker: Bool
     @Binding var selectedCategory: String?
+    @Binding var showExportView: Bool
+    @Binding var showAppearanceView: Bool
     var saveImage: () -> Void
     var loadSavedImage: () -> Void
     var deleteExistingProfileImage: () -> Void
@@ -175,8 +187,8 @@ struct HomeView: View {
                         Spacer()
                         Menu {
                             Button("Edit", action: { isEditing.toggle() })
-                            Button("Export", action: { /* Export action */ })
-                            Button("Appearance", action: { /* Appearance action */ })
+                            Button("Export", action: { showExportView = true })
+                            Button("Appearance", action: { showAppearanceView = true })
                             Button("App Details", action: { /* App details action */ })
                         } label: {
                             Image(systemName: "gearshape.fill")
@@ -247,7 +259,7 @@ struct HomeView: View {
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 20)
                                         .padding(.vertical, 10)
-                                        .background(Color(hex: "#3B8D85"))
+                                        .background(AppColors.accent)
                                         .cornerRadius(8)
                                 }
                             }
@@ -272,7 +284,7 @@ struct HomeView: View {
                                     QuickActionButton(
                                         title: "Add Goal",
                                         icon: "target",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         action: { /* Add Goal action */ }
                                     )
                                     
@@ -280,7 +292,7 @@ struct HomeView: View {
                                     QuickActionButton(
                                         title: "Track Habit",
                                         icon: "chart.line.uptrend.xyaxis",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         action: { /* Track Progress action */ }
                                     )
                                     
@@ -288,7 +300,7 @@ struct HomeView: View {
                                     QuickActionButton(
                                         title: "Journal",
                                         icon: "book.fill",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         action: { /* Journal Entry action */ }
                                     )
                                     
@@ -296,7 +308,7 @@ struct HomeView: View {
                                     QuickActionButton(
                                         title: "Schedule",
                                         icon: "calendar",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         action: { /* Calendar Event action */ }
                                     )
                                 }
@@ -321,7 +333,7 @@ struct HomeView: View {
                                     CategoryButton(
                                         title: "Personal",
                                         icon: "person.fill",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         isSelected: selectedCategory == "PERSONAL",
                                         action: { 
                                             selectedCategory = "PERSONAL"
@@ -334,7 +346,7 @@ struct HomeView: View {
                                     CategoryButton(
                                         title: "Health",
                                         icon: "heart.fill",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         isSelected: selectedCategory == "HEALTH",
                                         action: { 
                                             selectedCategory = "HEALTH"
@@ -350,7 +362,7 @@ struct HomeView: View {
                                     CategoryButton(
                                         title: "Professional",
                                         icon: "briefcase.fill",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         isSelected: selectedCategory == "PROFESSIONAL",
                                         action: { 
                                             selectedCategory = "PROFESSIONAL"
@@ -363,7 +375,7 @@ struct HomeView: View {
                                     CategoryButton(
                                         title: "Future",
                                         icon: "hourglass",
-                                        color: Color(hex: "#3B8D85"),
+                                        color: AppColors.accent,
                                         isSelected: selectedCategory == "FUTURE",
                                         action: { 
                                             selectedCategory = "FUTURE"
@@ -556,7 +568,7 @@ struct TimelineView: View {
                                         .fontWeight(.medium)
                                         .baselineOffset(1)
                                 }
-                                .foregroundColor(Color(hex: "#3B8D85"))
+                                .foregroundColor(AppColors.accent)
                                 .padding(.horizontal, 8)
                             }
                             .fixedSize()
@@ -568,7 +580,7 @@ struct TimelineView: View {
                         HStack(spacing: 0) {
                             // Birth circle
                             Circle()
-                                .fill(Color(hex: "#3B8D85"))
+                                .fill(AppColors.accent)
                                 .frame(width: 6, height: 6)
                             
                             GeometryReader { geometry in
@@ -577,7 +589,7 @@ struct TimelineView: View {
                                 
                                 ZStack(alignment: .leading) {
                                     Rectangle()
-                                        .fill(Color(hex: "#3B8D85"))
+                                        .fill(AppColors.accent)
                                         .frame(width: ageWidth, height: 2)
                                     
                                     Rectangle()
@@ -646,7 +658,7 @@ struct ProfileImageView: View {
                 Button("Change Image") {
                     showImagePicker = true
                 }
-                .foregroundColor(Color(hex: "#3B8D85"))
+                .foregroundColor(AppColors.accent)
                 .font(.system(size: 12))
                 
                 Button("Remove") {
@@ -691,8 +703,8 @@ struct CategoryButton: View {
                                     isSelected ? 
                                         LinearGradient(
                                             gradient: Gradient(colors: [
-                                                Color(hex: "#3B8D85").opacity(0.6),
-                                                Color(hex: "#3B8D85").opacity(0.2)
+                                                color.opacity(0.6),
+                                                color.opacity(0.2)
                                             ]),
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
@@ -877,24 +889,6 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
 }
 
-// Helper to use hex colors
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        let scanner = Scanner(string: hex)
-        if hex.hasPrefix("#") { scanner.currentIndex = scanner.string.index(after: scanner.currentIndex) }
-        
-        var rgbValue: UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-        
-        let r = Double((rgbValue & 0xFF0000) >> 16) / 255
-        let g = Double((rgbValue & 0x00FF00) >> 8) / 255
-        let b = Double(rgbValue & 0x0000FF) / 255
-
-        self.init(red: r, green: g, blue: b)
-    }
-}
-
 // Add this new ParticleView component
 struct ParticleView: View {
     struct Particle: Identifiable {
@@ -943,7 +937,7 @@ struct ParticleView: View {
     private func generateParticles(in size: CGSize) {
         // Use an array of colors for more variety
         let colors = [
-            Color(hex: "#3B8D85"), // Teal
+            AppColors.accent, // Dynamic accent color
             Color(hex: "#5B9BD5"), // Blue
             Color.white,          // White
             Color(hex: "#8E7CC3")  // Purple

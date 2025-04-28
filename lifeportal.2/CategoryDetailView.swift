@@ -116,7 +116,7 @@ struct CategoryDetailView: View {
         VStack(spacing: 20) {
             Image(systemName: getCategoryIcon())
                 .font(.system(size: 40))
-                .foregroundColor(Color(hex: "#3B8D85").opacity(0.7))
+                .foregroundColor(AppColors.accent.opacity(0.7))
                 .padding(.top, 30)
             
             Text("No items added yet")
@@ -159,7 +159,7 @@ struct CategoryDetailView: View {
                     toggleItemCompletion(item: item)
                 }) {
                     Image(systemName: item.isCompleted ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(item.isCompleted ? Color(hex: "#3B8D85") : Color.gray.opacity(0.6))
+                        .foregroundColor(item.isCompleted ? AppColors.accent : Color.gray.opacity(0.6))
                         .font(.system(size: 20))
                 }
             }
@@ -212,7 +212,7 @@ struct CategoryDetailView: View {
                 Text("Back")
                     .font(.system(size: 16, weight: .medium))
             }
-            .foregroundColor(Color(hex: "#3B8D85"))
+            .foregroundColor(AppColors.accent)
         }
     }
     
@@ -222,7 +222,7 @@ struct CategoryDetailView: View {
         }) {
             Image(systemName: "plus")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(Color(hex: "#3B8D85"))
+                .foregroundColor(AppColors.accent)
         }
     }
     
@@ -252,7 +252,7 @@ struct CategoryDetailView: View {
                             
                             DatePicker("", selection: $newItemDate, displayedComponents: .date)
                                 .datePickerStyle(GraphicalDatePickerStyle())
-                                .accentColor(Color(hex: "#3B8D85"))
+                                .accentColor(AppColors.accent)
                                 .colorScheme(.dark)
                         }
                         
@@ -285,7 +285,7 @@ struct CategoryDetailView: View {
                 }
                 .disabled(newItemTitle.isEmpty)
             )
-            .accentColor(Color(hex: "#3B8D85"))
+            .accentColor(AppColors.accent)
         }
     }
     
@@ -301,7 +301,7 @@ struct CategoryDetailView: View {
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        UINavigationBar.appearance().tintColor = UIColor(Color(hex: "#3B8D85"))
+        UINavigationBar.appearance().tintColor = UIColor(AppColors.accent)
     }
     
     private func getCategoryDescription() -> String {
